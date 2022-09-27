@@ -1,0 +1,44 @@
+pipeline{
+    agent any
+    parameters{
+            booleanParam(name: "Print_Message","description": "Print Messages to screen.", defaultValue: true)
+        }
+    stages{
+        stage('Init'){
+            steps{
+                  script{ 
+                    if(params.Print_Message){
+                        echo("Setting up Jenkins Pipeline")
+                    }
+                 }
+                sh "rm -rf Ex4_OS_python_test/"
+                sh "git clone https://github.com/funkey7dan/Ex4_OS_python_test.git"
+                sh "cp ex4_* Ex4_OS_python_test/"
+            }
+        }
+        stage('Test'){
+            steps{
+                script{
+                    if (params.Print_Message){
+                        echo("Running Tests")
+                    }
+                }
+                dir("Ex4_OS_python_test"){
+                    sh "python3 ex4_test.py"
+                }
+            }
+        }
+    }
+    post{
+        always{
+            script{
+                if (params.Print_Message){
+                    echo("Finished Jenkins Pipeline")
+                    echo("Deleting Ex4_OS_python_test")
+                    echo("Check console for results")
+                }
+            }
+            sh "rm -rf Ex4_OS_python_test/"
+        }
+    }
+}
