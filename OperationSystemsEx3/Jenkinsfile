@@ -1,0 +1,17 @@
+pipeline{
+    agent any
+    stages{
+        stage("Build"){
+            steps{
+                sh "make main"
+                echo "Build complete"
+            }
+        }
+        stage ("test"){
+            steps{
+                sh "./ex3.out conf.txt"
+                echo "Test complete"
+            }
+        }
+    }
+}
